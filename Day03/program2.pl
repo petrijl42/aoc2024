@@ -37,4 +37,6 @@ while (my $line = <$fd>)
     }
 }
 
+close $fd;
+
 print "Result: $sum\n";

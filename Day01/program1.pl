@@ -17,6 +17,8 @@ while (my $line = <$fd>)
     push @second, $second;
 }
 
+close $fd;
+
 @first = sort @first;
 @second = sort @second;
 

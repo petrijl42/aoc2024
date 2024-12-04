@@ -28,6 +28,8 @@ for (my $x = 0; $x < int(@{$data}); $x++)
     }
 }
 
+close $fd;
+
 print "Count: $count\n";
 
 sub find_words

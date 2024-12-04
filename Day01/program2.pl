@@ -24,6 +24,8 @@ while (my $line = <$fd>)
     }
 }
 
+close $fd;
+
 my $similarity = 0;
 
 my $size = int(@first);
