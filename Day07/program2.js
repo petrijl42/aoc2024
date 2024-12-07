@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-const { match } = require("assert");
 const fs = require("fs");
 const path = require("path");
 
