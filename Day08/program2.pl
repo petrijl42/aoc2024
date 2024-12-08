@@ -93,11 +93,13 @@ sub find_antinodes
                     {
                         $found = 0;
 
-                        my $dx = ($second->{x} - $first->{x}) * $i;
-                        my $dy = ($second->{y} - $first->{y}) * $i;
+                        my $dx = ($second->{x} - $first->{x});
+                        my $dy = ($second->{y} - $first->{y});
 
-                        my $x = $first->{x} + $dx;
-                        my $y = $first->{y} + $dy;
+                        ($dx, $dy) = reduce($dx, $dy);
+
+                        my $x = $first->{x} + ($dx * $i);
+                        my $y = $first->{y} + ($dy * $i);
 
                         if ($x >= 0 && $x < $width && $y >= 0 && $y < $height)
                         {
@@ -127,4 +129,25 @@ sub count_antinodes
     }
 
     return $count;
+}
+
+sub reduce
+{
+    my $x = shift;
+    my $y = shift;
+
+    # print "Reducing $x, $y\n";
+
+    for (my $i = 2; $i <= abs($x); $i++)
+    {
+        while ($x % $i == 0 && $y % $i == 0)
+        {
+            $x /= $i;
+            $y /= $i;
+        }
+    }
+
+    # print "Reduced to $x, $y\n";
+
+    return ($x, $y);
 }
