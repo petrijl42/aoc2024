@@ -97,6 +97,17 @@ sub find_antinodes
                     {
                         $map->[$y]->[$x] = "#";
                     }
+
+                    if ($dx % 3 == 0 && $dy % 3 == 0)
+                    {
+                        $x = $first->{x} + $dx / 3;
+                        $y = $first->{y} + $dy / 3;
+
+                        if ($x >= 0 && $x < $width && $y >= 0 && $y < $height)
+                        {
+                            $map->[$y]->[$x] = "#";
+                        }
+                    }
                 }
             }
         }
