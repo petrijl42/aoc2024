@@ -22,17 +22,14 @@ foreach my $size (split //, $line)
     {
         if ($type)
         {
-            if ($size > 0)
-            {
-                push @disk, { id => $index, size => $size };
-                $index++;
-            }
+            push @disk, { id => $index, size => $size };
+            $index++;
         }
         else
         {
             if (not defined $disk[-1]->{id})
             {
-                print "Increasing empty size: $size\n";
+                # print "Increasing empty size: $size\n";
                 $disk[-1]->{size} += $size;
             }
             else
