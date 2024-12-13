@@ -8,97 +8,97 @@ main();
 
 sub main
 {
-my $fd;
+    my $fd;
 
-open($fd, "<", "input2.txt") or die "Could not open input for reading";
+    open($fd, "<", "input2.txt") or die "Could not open input for reading";
 
-my @machines;
+    my @machines;
 
-my $prize;
-my $buttons;
+    my $prize;
+    my $buttons;
 
-while (my $line = <$fd>)
-{
-    chomp $line;
-
-    if ($line =~ /Button ([AB]): X\+(\d+), Y\+(\d+)/)
+    while (my $line = <$fd>)
     {
-        my $name = $1;
-        my $x = $2;
-        my $y = $3;
+        chomp $line;
 
-        my $price;
-
-        if ($name eq 'A')
+        if ($line =~ /Button ([AB]): X\+(\d+), Y\+(\d+)/)
         {
-            $price = 3;
+            my $name = $1;
+            my $x = $2;
+            my $y = $3;
+
+            my $price;
+
+            if ($name eq 'A')
+            {
+                $price = 3;
+            }
+            elsif ($name eq 'B')
+            {
+                $price = 1;
+            }
+            else
+            {
+                die "Invalid button name: $name\n";
+            }
+
+            push @{$buttons}, { name => $name, x => $x, y => $y, price => $price };
         }
-        elsif ($name eq 'B')
+        elsif ($line =~ /Prize: X=(\d+), Y=(\d+)/)
         {
-            $price = 1;
+            my $x = $1 + 10000000000000;
+            my $y = $2 + 10000000000000;
+
+            $prize = { x => $x, y => $y };
+        }
+        elsif ($line eq '')
+        {
+            if (defined $prize && defined $buttons)
+            {
+                push @machines, { prize => $prize, buttons => $buttons };
+
+                $prize = undef;
+                $buttons = undef;
+            }
+            else
+            {
+                die "Invalid input. Missing prize or buttons\n";
+            }
         }
         else
         {
-            die "Invalid button name: $name\n";
+            die "Invalid input: $line\n";
         }
-
-        push @{$buttons}, { name => $name, x => $x, y => $y, price => $price };
     }
-    elsif ($line =~ /Prize: X=(\d+), Y=(\d+)/)
-    {
-        my $x = $1 + 10000000000000;
-        my $y = $2 + 10000000000000;
 
-        $prize = { x => $x, y => $y };
-    }
-    elsif ($line eq '')
+    if (defined $prize && defined $buttons)
     {
-        if (defined $prize && defined $buttons)
+        push @machines, { prize => $prize, buttons => $buttons };
+    }
+
+    close($fd);
+
+    my $total = 0;
+
+    foreach my $machine (@machines)
+    {
+        my $prize = $machine->{prize};
+        my $buttons = $machine->{buttons};
+
+        my $result = get_button_counts($prize, $buttons);
+
+        if (defined $result)
         {
-            push @machines, { prize => $prize, buttons => $buttons };
-
-            $prize = undef;
-            $buttons = undef;
+            $total += get_price($buttons, $result);
+            # print "Prize found: $result->[0], $result->[1]\n";
         }
         else
         {
-            die "Invalid input. Missing prize or buttons\n";
+            # print "Prize not found\n";
         }
     }
-    else
-    {
-        die "Invalid input: $line\n";
-    }
-}
 
-if (defined $prize && defined $buttons)
-{
-    push @machines, { prize => $prize, buttons => $buttons };
-}
-
-close($fd);
-
-my $total = 0;
-
-foreach my $machine (@machines)
-{
-    my $prize = $machine->{prize};
-    my $buttons = $machine->{buttons};
-
-    my $result = get_button_counts($prize, $buttons);
-
-    if (defined $result)
-    {
-        $total += get_price($buttons, $result);
-        # print "Prize found: $result->[0], $result->[1]\n";
-    }
-    else
-    {
-        # print "Prize not found\n";
-    }
-}
-
-print "Total: $total\n";
+    print "Total: $total\n";
 }
 
 sub get_price
