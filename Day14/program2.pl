@@ -74,11 +74,6 @@ sub get_robot_positions_map
 
     my @map = (0) x ($dimensions->{x} * $dimensions->{y});
 
-    my $middle_x = int($dimensions->{x} / 2);
-    my $middle_y = int($dimensions->{y} / 2);
-
-    my @quadrants = (0, 0, 0, 0);
-
     foreach my $robot (@{$robots})
     {
         my $x = ($robot->{x} + $multiplier * $robot->{vx}) % $dimensions->{x};
