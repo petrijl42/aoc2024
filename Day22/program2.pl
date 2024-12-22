@@ -72,7 +72,9 @@ sub iterate_monkey
     {
         # print "Iteration $i: $number\n";
 
-        push @numbers, $number;
+        my $bananas = $number % 10;
+
+        push @numbers, $bananas;
         if (scalar(@numbers) > 4)
         {
             shift @numbers if scalar(@numbers) > 5;
@@ -81,7 +83,7 @@ sub iterate_monkey
 
             if ((not defined $sequences->{$sequence}->{monkey}) || $sequences->{$sequence}->{monkey} != $monkey)
             {
-                $sequences->{$sequence}->{bananas} += $number % 10;
+                $sequences->{$sequence}->{bananas} += $bananas;
                 $sequences->{$sequence}->{monkey} = $monkey;
 
                 if ($sequences->{$sequence}->{bananas} > $max)
@@ -125,7 +127,7 @@ sub get_sequence
 
     for (my $i = 0; $i < (scalar(@$numbers) - 1); $i++)
     {
-        push @sequence, ($numbers->[$i+1] % 10) - ($numbers->[$i] % 10);
+        push @sequence, ($numbers->[$i+1]) - ($numbers->[$i]);
     }
 
     return join(",", @sequence);
